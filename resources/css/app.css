@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.vue';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+}
+
+html, body {
+    height: 100%;
+    background: #020617;
+    color: #f1f5f9;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+#app { min-height: 100vh; }
+
+/* Custom scrollbar untuk dark theme */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer;
+}
+@utility btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30;
+}
+@utility btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700;
+}
+@utility btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20;
+}
+@utility btn-success {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20;
+}
+@utility btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition cursor-pointer bg-transparent text-slate-300 hover:bg-slate-800;
+}
+@utility input {
+    @apply block w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none transition text-sm;
+}
+@utility label {
+    @apply block text-sm font-medium text-slate-300 mb-1.5;
+}
+@utility card {
+    @apply bg-slate-900 rounded-2xl border border-slate-800 p-5 transition;
+}
+@utility card-hover {
+    @apply bg-slate-900 rounded-2xl border border-slate-800 p-5 transition hover:border-indigo-500/50 hover:bg-slate-900/80;
+}
+@utility badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold;
+}
+
+table.table { @apply w-full text-sm; }
+.table thead th { @apply text-left px-4 py-3 bg-slate-900/50 text-slate-400 font-semibold border-b border-slate-800 uppercase text-xs tracking-wider; }
+.table tbody td { @apply px-4 py-3 border-b border-slate-800 text-slate-200; }
+.table tbody tr { @apply transition; }
+.table tbody tr:hover { @apply bg-slate-800/50; }
+.table tbody tr:last-child td { @apply border-b-0; }
