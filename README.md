@@ -36,6 +36,8 @@ Duplicate the example environment file and generate the application key:
 Bash
 cp .env.example .env
 php artisan key:generate
+php artisan jwt:secret
+npm run build
 Note: Open the .env file and configure your database settings (e.g., DB_DATABASE=pawlan). Ensure that the database has been created in your local MySQL server.
 
 4. Migrate and seed the database
