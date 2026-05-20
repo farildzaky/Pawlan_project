@@ -10,6 +10,7 @@ const featuredTrainers = ref([]);
 const upcomingSessions = ref([]);
 const stats = ref({ classes: 0, trainers: 0, sessions: 0 });
 const loading = ref(true);
+const heroSession = ref(null);
 
 const ctaPrimary = computed(() => auth.isAuthenticated
     ? { to: '/dashboard', label: '🚀 Ke Dashboard' }
@@ -25,6 +26,9 @@ onMounted(async () => {
         featuredClasses.value = c.data.data;
         featuredTrainers.value = t.data.data;
         upcomingSessions.value = s.data.data;
+        if (s.data.data.length > 0) {
+            heroSession.value = s.data.data[Math.floor(Math.random() * s.data.data.length)];
+        }
         stats.value = {
             classes: c.data.meta.total,
             trainers: t.data.meta.total,
@@ -32,6 +36,46 @@ onMounted(async () => {
         };
     } catch (e) { /* tampilkan landing tanpa data jika API error */ }
     loading.value = false;
+});
+
+const categoryIcon = (c) => ({
+    cardio: '🔥',
+    strength: '💪',
+    flexibility: '🧘',
+    'mind-body': '🧘',
+}[c] || '🏋️');
+
+const heroData = computed(() => {
+    if (heroSession.value) {
+        const s = heroSession.value;
+        const today = new Date();
+        const sDate = new Date(s.session_date);
+        const dateLabel = today.toDateString() === sDate.toDateString()
+            ? 'Hari ini'
+            : sDate.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
+        return {
+            icon: categoryIcon(s.gym_class?.category),
+            name: s.gym_class?.name ?? 'Kelas Fitness',
+            dateTime: `${dateLabel} · ${s.start_time?.slice(0, 5) ?? '07:00'}`,
+            trainer: s.trainer?.name ?? '—',
+            location: s.location ?? '—',
+            bookedCount: s.booked_count ?? 0,
+            capacity: s.capacity ?? 15,
+            price: s.price ?? 0,
+            isFull: (s.available_slots ?? 1) <= 0,
+        };
+    }
+    return {
+        icon: '🔥',
+        name: 'HIIT Burn Session',
+        dateTime: 'Hari ini · 07:00',
+        trainer: 'Andi Pratama',
+        location: 'Studio A',
+        bookedCount: 12,
+        capacity: 15,
+        price: 75000,
+        isFull: false,
+    };
 });
 
 const categoryColor = (c) => ({
@@ -130,37 +174,43 @@ const features = [
                     <div class="relative bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-8 shadow-2xl">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-rose-500 rounded-xl flex items-center justify-center text-2xl">🔥</div>
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-rose-500 rounded-xl flex items-center justify-center text-2xl">
+                                    {{ heroData.icon }}
+                                </div>
                                 <div>
-                                    <div class="font-semibold">HIIT Burn Session</div>
-                                    <div class="text-xs text-slate-400">Hari ini · 07:00</div>
+                                    <div class="font-semibold">{{ heroData.name }}</div>
+                                    <div class="text-xs text-slate-400">{{ heroData.dateTime }}</div>
                                 </div>
                             </div>
-                            <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Live</span>
+                            <span v-if="heroData.isFull" class="text-xs px-2 py-1 rounded-full bg-rose-500/20 text-rose-300">Penuh</span>
+                            <span v-else class="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Tersedia</span>
                         </div>
                         <div class="space-y-3">
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-slate-400">👨‍🏫 Trainer</span>
-                                <span>Andi Pratama</span>
+                                <span>{{ heroData.trainer }}</span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-slate-400">📍 Lokasi</span>
-                                <span>Studio A</span>
+                                <span>{{ heroData.location }}</span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-slate-400">👥 Slot</span>
-                                <span>12/15 terisi</span>
+                                <span>{{ heroData.bookedCount }}/{{ heroData.capacity }} terisi</span>
                             </div>
                             <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" style="width: 80%"></div>
+                                <div class="h-full bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full transition-all duration-700"
+                                     :style="{ width: `${Math.min(100, (heroData.bookedCount / heroData.capacity) * 100)}%` }"></div>
                             </div>
                         </div>
                         <div class="mt-6 pt-6 border-t border-slate-800 flex items-center justify-between">
                             <div>
                                 <div class="text-xs text-slate-400">Harga</div>
-                                <div class="text-2xl font-bold">Rp 75.000</div>
+                                <div class="text-2xl font-bold">Rp {{ Number(heroData.price).toLocaleString('id-ID') }}</div>
                             </div>
-                            <button class="px-4 py-2 bg-white text-slate-900 rounded-lg font-semibold text-sm hover:bg-slate-100">Book Now</button>
+                            <RouterLink to="/login" class="px-4 py-2 bg-white text-slate-900 rounded-lg font-semibold text-sm hover:bg-slate-100 transition">
+                                Book Now
+                            </RouterLink>
                         </div>
                     </div>
                 </div>

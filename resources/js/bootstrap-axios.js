@@ -15,7 +15,6 @@ axios.interceptors.response.use(
     (res) => res,
     (err) => {
         if (err.response && err.response.status === 401) {
-            // Token expired/invalid: bersihkan & redirect ke login
             localStorage.removeItem('fitflow_token');
             localStorage.removeItem('fitflow_user');
             if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {

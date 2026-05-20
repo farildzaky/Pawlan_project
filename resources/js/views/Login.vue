@@ -3,6 +3,8 @@ import { ref } from 'vue';
 import { useRouter, useRoute, RouterLink } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
+
+//import useAuthStore untuk mengakses fungsi login yang sudah dibuat di auth store yang disimpan pada variabel auth, dan useRouter untuk melakukan navigasi setelah login berhasil, serta useRoute untuk mendapatkan query parameter redirect jika ada
 const auth = useAuthStore();
 const router = useRouter();
 const route = useRoute();
@@ -16,6 +18,7 @@ async function submit() {
     loading.value = true;
     error.value = '';
     try {
+        //bagian memanggil fungsi login dari auth store yang akan mengirim request ke backend
         await auth.login(form.value.email, form.value.password);
         router.push(route.query.redirect || '/dashboard');
     } catch (e) {

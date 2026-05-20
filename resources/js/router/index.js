@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
+//meta digunakan sebagai penanda untuk kebutuhan auth dan role pada route tertentu
 const routes = [
     { path: '/', name: 'landing', component: () => import('../views/Landing.vue') },
     { path: '/login', name: 'login', component: () => import('../views/Login.vue'), meta: { guest: true } },
@@ -42,6 +43,8 @@ const router = createRouter({
     routes,
 });
 
+
+//cek kebutuhan auth dan role sebelum masuk ke route
 router.beforeEach((to) => {
     const auth = useAuthStore();
 

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '../../stores/auth';
 
+//deklarasi variabel dan fungsi yang dibutuhkan pada halaman index kelas, seperti items untuk menyimpan data kelas yang didapat dari backend, loading untuk menandakan proses loading data, search untuk menyimpan kata kunci pencarian, filterCat untuk menyimpan kategori yang dipilih pada filter, meta untuk menyimpan informasi paginasi, dan fungsi load untuk mengambil data kelas dari backend dengan parameter pencarian dan filter yang sesuai, serta fungsi remove untuk menghapus kelas tertentu. Selain itu juga terdapat fungsi categoryColor untuk menentukan warna badge kategori pada tampilan kelas berdasarkan kategorinya.
 const auth = useAuthStore();
 const items = ref([]);
 const loading = ref(false);
@@ -11,6 +12,8 @@ const search = ref('');
 const filterCat = ref('');
 const meta = ref({});
 
+//fungsi untuk mengambil data kelas dari backend dengan parameter pencarian dan filter yang sesuai, serta fungsi remove untuk menghapus kelas tertentu. 
+//Selain itu juga terdapat fungsi categoryColor untuk menentukan warna badge kategori pada tampilan kelas berdasarkan kategorinya.
 async function load() {
     loading.value = true;
     try {
@@ -23,6 +26,7 @@ async function load() {
     } finally { loading.value = false; }
 }
 
+//fungsi untuk menghapus kelas tertentu dengan mengirim request delete ke backend, dan jika berhasil maka akan memanggil fungsi load untuk memperbarui daftar kelas yang ditampilkan. Jika terjadi error saat penghapusan, maka akan menampilkan pesan error yang didapat dari response backend atau pesan default 'Gagal hapus'.
 async function remove(id) {
     if (!confirm('Yakin hapus kelas ini?')) return;
     try {
@@ -38,6 +42,8 @@ const categoryColor = (c) => ({
     'mind-body': 'bg-violet-500/15 text-violet-300 border border-violet-500/30',
 }[c] || 'bg-slate-700/40 text-slate-300');
 
+//get load sesuai yang sudah dibuat diatas untuk menampilkan 
+// data kelas pertama kali saat halaman dimuat
 onMounted(load);
 </script>
 

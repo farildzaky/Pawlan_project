@@ -10,6 +10,7 @@ const router = useRouter();
 const item = ref(null);
 const loading = ref(true);
 
+//fungsi untuk mengambil parameter kelas
 async function load() {
     try {
         const { data } = await axios.get(`/classes/${route.params.id}`);
